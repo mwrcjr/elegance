@@ -4,95 +4,100 @@
 
 @section('extra-css')
 
+<script src="https://js.stripe.com/v3/"></script>
+
 @endsection
 
 @section('content')
 
     <div class="container">
 
+      @if (session()->has('success_message'))
+            <div class="spacer"></div>
+            <div class="alert alert-success">
+                {{ session()->get('success_message') }}
+            </div>
+        @endif
+
+        @if(count($errors) > 0)
+            <div class="spacer"></div>
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <h1 class="checkout-heading stylish-heading">Finalizar Compra</h1>
         <div class="checkout-section">
             <div>
-                <form action="#">
+                <form action="{{ route('checkout.store') }}" method="POST" id="payment-form">
+                    {{ csrf_field() }}
                     <h2>Dados Pessoais</h2>
 
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" value="">
+                        <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
                     </div>
                     <div class="form-group">
                         <label for="name">Nome</label>
-                        <input type="text" class="form-control" id="name" name="name" value="">
+                        <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
                     </div>
                     <div class="form-group">
                         <label for="address">Endereço</label>
-                        <input type="text" class="form-control" id="address" name="address" value="">
+                        <input type="text" class="form-control" id="address" name="address" value="{{ old('address') }}" required>
                     </div>
 
                     <div class="half-form">
                         <div class="form-group">
                             <label for="city">Cidade</label>
-                            <input type="text" class="form-control" id="city" name="city" value="">
+                            <input type="text" class="form-control" id="city" name="city" value="{{ old('city') }}" required>
                         </div>
                         <div class="form-group">
                             <label for="province">Estado</label>
-                            <input type="text" class="form-control" id="province" name="province" value="">
+                            <input type="text" class="form-control" id="province" name="province" value="{{ old('province') }}" required>
                         </div>
                     </div> <!-- end half-form -->
 
                     <div class="half-form">
                         <div class="form-group">
                             <label for="postalcode">CEP</label>
-                            <input type="text" class="form-control" id="postalcode" name="postalcode" value="">
+                            <input type="text" class="form-control" id="postalcode" name="postalcode" value="{{ old('postalcode') }}" required>
                         </div>
                         <div class="form-group">
                             <label for="phone">Telefone</label>
-                            <input type="text" class="form-control" id="phone" name="phone" value="">
+                            <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}" required>
                         </div>
                     </div> <!-- end half-form -->
 
                     <div class="spacer"></div>
 
-                    <h2>Realizar Pagamento</h2>
-                <!--    <div class="form-group">
+                    <h2>Detalhes do Pagamento</h2>
+
+                    <div class="form-group">
                         <label for="name_on_card">Nome no Cartão</label>
                         <input type="text" class="form-control" id="name_on_card" name="name_on_card" value="">
                     </div>
 
                     <div class="form-group">
-                        <label for="cc-number">Numero do Cartão</label>
-                        <input type="text" class="form-control" id="cc-number" name="cc-number" value="">
+                        <label for="card-element">
+                          Cartão de Crédito ou Débito
+                        </label>
+                        <div id="card-element">
+                          <!-- a Stripe Element will be inserted here. -->
+                        </div>
+
+                        <!-- Used to display form errors -->
+                        <div id="card-errors" role="alert"></div>
                     </div>
+                    <div class="spacer"></div>
 
-                    <div class="half-form">
-                        <div class="form-group">
-                            <label for="expiry">Data de vencimento do cartão</label>
-                            <input type="text" class="form-control" id="expiry" name="expiry" placeholder="MM/DD">
-                        </div>
-                        <div class="form-group">
-                            <label for="cvc">Código de segurança</label>
-                            <input type="text" class="form-control" id="cvc" name="cvc" value="">
-                        </div>
-                    </div> --><!-- end half-form -->
+                    <button type="submit" id="complete-order" class="button-primary full-width">Finalizar Compra</button>
 
-                    
 
-                    <!-- <button type="submit" class="button-primary full-width">CONFIRMAR A COMPRA</button> -->
                 </form>
-                <div class="spacer"></div>
-
-                <form method="post" id="paypal-payment-form" action="#">
-                        
-                        <section>
-                            <div class="bt-drop-in-wrapper">
-                                <div id="bt-dropin"></div>
-                            </div>
-                        </section>
-
-                        <input id="nonce" name="payment_method_nonce" type="hidden" />
-                        <button class="button-primary" type="submit"><span>Pague com PayPal</span></button>
-                    </form>
-
             </div>
 
 
@@ -132,10 +137,10 @@
                     </div>
 
                     <div class="checkout-totals-right">
-                        R$ {{ Cart::subtotal() }} <br>
+                        R$ {{ Cart::subtotal() }},00<br>
                         <!-- -$750.00 <br> -->
-                        R$ {{ Cart::tax() }} <br>
-                        <span class="checkout-totals-total">R$ {{ Cart::total() }}</span>
+                        R$ {{ Cart::tax() }},00<br>
+                        <span class="checkout-totals-total">R$ {{ Cart::total() }},00</span>
 
                     </div>
                 </div> <!-- end checkout-totals -->
@@ -148,16 +153,94 @@
 @endsection
 @section('extra-js')
     <script>
-        // Render the PayPal button into #paypal-button-container
-        paypal.Buttons({
+        (function(){
+            // Create a Stripe client
+            var stripe = Stripe('pk_test_3zRyLq1sQ2SjlfRZSCJVk8LO00aTS4va3y');
 
-            style: {
-                color:  'black',
-                shape:  'pill',
-                label:  'pay',
-                height: 40
+            // Create an instance of Elements
+            var elements = stripe.elements();
+
+            // Custom styling can be passed to options when creating an Element.
+            // (Note that this demo uses a wider set of styles than the guide below.)
+            var style = {
+              base: {
+                color: '#32325d',
+                lineHeight: '18px',
+                fontFamily: '"Roboto", Helvetica Neue", Helvetica, sans-serif',
+                fontSmoothing: 'antialiased',
+                fontSize: '16px',
+                '::placeholder': {
+                  color: '#aab7c4'
+                }
+              },
+              invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a'
+              }
+            };
+
+            // Create an instance of the card Element
+            var card = elements.create('card', {
+                style: style,
+                hidePostalCode: true
+            });
+
+            // Add an instance of the card Element into the `card-element` <div>
+            card.mount('#card-element');
+
+            // Handle real-time validation errors from the card Element.
+            card.addEventListener('change', function(event) {
+              var displayError = document.getElementById('card-errors');
+              if (event.error) {
+                displayError.textContent = event.error.message;
+              } else {
+                displayError.textContent = '';
+              }
+            });
+
+            // Handle form submission
+            var form = document.getElementById('payment-form');
+            form.addEventListener('submit', function(event) {
+              event.preventDefault();
+
+              // Disable the submit button to prevent repeated clicks
+              document.getElementById('complete-order').disabled = true;
+
+              var options = {
+                name: document.getElementById('name_on_card').value,
+                address_line1: document.getElementById('address').value,
+                address_city: document.getElementById('city').value,
+                address_state: document.getElementById('province').value,
+                address_zip: document.getElementById('postalcode').value
+              }
+
+              stripe.createToken(card, options).then(function(result) {
+                if (result.error) {
+                  // Inform the user if there was an error
+                  var errorElement = document.getElementById('card-errors');
+                  errorElement.textContent = result.error.message;
+
+                  // Enable the submit button
+                  document.getElementById('complete-order').disabled = false;
+                } else {
+                  // Send the token to your server
+                  stripeTokenHandler(result.token);
+                }
+              });
+            });
+
+            function stripeTokenHandler(token) {
+              // Insert the token ID into the form so it gets submitted to the server
+              var form = document.getElementById('payment-form');
+              var hiddenInput = document.createElement('input');
+              hiddenInput.setAttribute('type', 'hidden');
+              hiddenInput.setAttribute('name', 'stripeToken');
+              hiddenInput.setAttribute('value', token.id);
+              form.appendChild(hiddenInput);
+
+              // Submit the form
+              form.submit();
             }
-
-        }).render('#paypal-button-container');
+        })();
     </script>
 @endsection

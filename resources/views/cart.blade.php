@@ -99,16 +99,16 @@
                         <span class="cart-totals-total">TOTAL</span>
                     </div>
                     <div class="cart-totals-subtotal">
-                        R$ {{ Cart::subtotal() }} <br>
-                        R$ {{ Cart::tax() }}<br>
-                        <span class="cart-totals-total">R$ {{ Cart::total() }}</span>
+                        R$ {{ Cart::subtotal() }} ,00<br>
+                        R$ {{ Cart::tax() }},00<br>
+                        <span class="cart-totals-total">R$ {{ Cart::total() }},00</span>
                     </div>
                 </div>
             </div> <!-- end cart-totals -->
 
             <div class="cart-buttons">
                 <a href="{{ route('shop.index') }}" class="button">Continuar comprando</a>
-                <a href="/checkout" class="button-primary">Finalizar compra</a>
+                <a href="{{ route('checkout.index') }}" class="button-primary">Finalizar compra</a>
             </div>
 
             @else
