@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use Illuminate\Http\Request;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
 {
@@ -83,7 +84,18 @@ class CartController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'quantity' => 'required|numeric|between:1,5'
+        ]);
+
+        if ($validator->fails()) {
+            session()->flash('errors', collect(['A quantidade deve ser entre 1 a 5 unidades.']));
+            return response()->json(['success' => false], 400);
+        }
+
+        Cart::update($id, $request->quantity);
+        session()->flash('success_message', 'Quantidade alterada com sucesso!');
+        return response()->json(['success' => true]);
     }
 
     /**
