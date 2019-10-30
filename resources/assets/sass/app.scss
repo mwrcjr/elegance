@@ -18,13 +18,14 @@
 @import 'components/might-like';
 @import 'components/form';
 @import 'components/alerts';
+@import 'components/pagination';
 
 // Layout
 @import 'layout/header';
 @import 'layout/footer';
 
 // Pages
-@import 'pages/main';
+@import 'pages/landing-page';
 @import 'pages/shop';
 @import 'pages/product';
 @import 'pages/cart';

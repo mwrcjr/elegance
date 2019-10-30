@@ -20,35 +20,41 @@
         <div class="sidebar">
             <h3>Filtrar por Categorias</h3>
             <ul>
-                <li><a href="#">Camisetas</a></li>
-                <li><a href="#">Camisa de time</a></li>
-                <li><a href="#">Bonés</a></li>
-                <li><a href="#">Oculos de Sol</a></li>
-                <li><a href="#">Moda Feminina</a></li>
-                <li><a href="#">Moda Social</a></li>
-                <li><a href="#">Acessórios</a></li>
-            </ul>
-
-            <h3>Filtrar por Preço</h3>
-            <ul>
-                <li><a href="#">até R$ 100</a></li>
-                <li><a href="#">de R$ 100 a R$ 500</a></li>
-                <li><a href="#">acima de R$ 500</a></li>
+                @foreach ($categories as $category)
+                    <li class="{{ setActiveCategory($category->slug) }}"><a href="{{ route('shop.index', ['category' => $category->slug]) }}">{{ $category->name }}</a></li>
+                @endforeach
             </ul>
         </div> <!-- end sidebar -->
         <div>
-            <h1 class="stylish-heading">Camisa de time</h1>
+            <div class="products-header">
+                <h1 class="stylish-heading">{{ $categoryName }}</h1>
+                <div>
+                    <strong>Ordenar por Preço: </strong>
+                    <a href="{{ route('shop.index', ['category'=> request()->category, 'sort' => 'low_high']) }}">Mais baratos</a> |
+                    <a href="{{ route('shop.index', ['category'=> request()->category, 'sort' => 'high_low']) }}">Mais caros</a>
+
+                </div>
+            </div>
+
+
             <div class="products text-center">
 
-                @foreach ($products as $product)
+                @forelse ($products as $product)
                     <div class="product">
                         <a href="{{ route('shop.show', $product->slug) }}"><img src="{{ asset('img/products/'.$product->slug.'.png') }}" alt="product"></a>
                         <a href="{{ route('shop.show', $product->slug) }}"><div class="product-name">{{ $product->name }}</div></a>
                         <div class="product-price">{{ $product->presentPrice() }}</div>
                     </div>
-                @endforeach
+                @empty
+                    <div style="text-align: left">Nenhum item foi encontrado!</div>
+                @endforelse
                 
             </div> <!-- end products -->
+
+            <div class="spacer"></div>
+            {{ $products->appends(request()->input())->links() }}
+            
+
         </div>
     </div>
 
