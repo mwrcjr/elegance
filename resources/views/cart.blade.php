@@ -81,15 +81,6 @@
 
             </div> <!-- end cart-table -->
 
-            <a href="#" class="have-code">Se você possui um código de desconto, informe-o abaixo:</a>
-
-            <div class="have-code-container">
-                <form action="#">
-                    <input type="text">
-                    <button type="submit" class="button button-plain">Aplicar</button>
-                </form>
-            </div> <!-- end have-code-container -->
-
             <div class="cart-totals">
                 <div class="cart-totals-left">
                     As entregas são realizadas pelo correio, e o valor do frete assim como o tempo de entrega variam conforme a sua localização!

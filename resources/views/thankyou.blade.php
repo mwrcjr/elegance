@@ -11,16 +11,19 @@
 @section('content')
 
    <div class="thank-you-section">
-       <h1>Compra realizada com sucesso! </h1>
-   	   <h2>Agradecemos a preferência.</h2>
+   	 <div class="spacer"></div>
+       <h1>Compra realizada <br> com sucesso!</h1>
        <p>Todos os dados da compra foram enviados ao seu e-mail! Atenciosamente...</p>
        <div class="spacer"></div>
        <div>
            <a href="{{ url('/') }}" class="button">Elegance Bastos</a>
        </div>
+     <div class="spacer"></div>
+     <div class="spacer"></div>
+     <div class="spacer"></div>
+     <div class="spacer"></div>
+     <div class="spacer"></div>
+     <div class="spacer"></div>
    </div>
-
-
-
 
 @endsection

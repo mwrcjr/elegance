@@ -95,6 +95,7 @@ class CartController extends Controller
 
         Cart::update($id, $request->quantity);
         session()->flash('success_message', 'Quantidade alterada com sucesso!');
+        session()->forget('coupon');
         return response()->json(['success' => true]);
     }
 
