@@ -20,18 +20,7 @@
         <header class="with-background">
             <div class="top-nav container">
                 <div class="logo">Roupas, Calçados e Acessórios</div>
-                <ul>
-                    <li><a href="{{ route('shop.index') }}">Comprar</a></li>
-                    <li><a href="#">Sobre Nós</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li>
-                        <a href="{{ route('cart.index') }}">Carrinho <span class="cart-count">
-                            @if (Cart::instance('default')->count() > 0)
-                            <span>{{ Cart::instance('default')->count() }}</span></span>
-                            @endif
-                        </a>
-                    </li>
-                </ul>
+                {{ menu('main', 'partials.menus.main') }}
             </div> <!-- end top-nav -->
             <div class="hero container">
                 <div class="hero-copy">
@@ -57,23 +46,23 @@
                 <p class="section-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore vitae nisi, consequuntur illum dolores cumque pariatur quis provident deleniti nesciunt officia est reprehenderit sunt aliquid possimus temporibus enim eum hic.</p>
 
                 <div class="text-center button-container">
-                    <a href="#" class="button">Lançamentos</a>
-                    <a href="#" class="button">Promoções</a>
+                    <a href="{{ route('shop.index') }}" class="button">Lançamentos</a>
+                    <a href="{{ route('shop.show', '?category=off') }}" class="button">Promoções</a>
                 </div>
 
-                {{-- <div class="tabs">
+                <!-- <div class="tabs">
                     <div class="tab">
                         Lançamentos
                     </div>
                     <div class="tab">
                         Promoções
                     </div>
-                </div> --}}
+                </div> -->
 
                 <div class="products text-center">
                     @foreach ($products as $product)
                         <div class="product">
-                             <a href="{{ route('shop.show', $product->slug) }}"><img src="/img/products/{{$product->slug}}.png" alt="product"></a>
+                             <a href="{{ route('shop.show', $product->slug) }}"><img src="{{ productImage($product->image) }}" alt="product"></a>
                             <a href="{{ route('shop.show', $product->slug) }}"><div class="product-name">{{ $product->name }}</div></a>
                             <div class="product-price">{{ $product->presentPrice() }}</div>
                         </div>
