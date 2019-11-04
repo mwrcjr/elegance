@@ -93,9 +93,9 @@
                         <span class="cart-totals-total">TOTAL</span>
                     </div>
                     <div class="cart-totals-subtotal">
-                        R$ {{ Cart::subtotal() }} ,00<br>
-                        R$ {{ Cart::tax() }},00<br>
-                        <span class="cart-totals-total">R$ {{ Cart::total() }},00</span>
+                        R$ {{ Cart::subtotal() }}<br>
+                        R$ {{ Cart::tax() }}<br>
+                        <span class="cart-totals-total">R$ {{ Cart::total() }}</span>
                     </div>
                 </div>
             </div> <!-- end cart-totals -->

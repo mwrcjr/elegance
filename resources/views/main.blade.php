@@ -19,8 +19,13 @@
     <body>
         <header class="with-background">
             <div class="top-nav container">
-                <div class="logo">Roupas, Calçados e Acessórios</div>
-                {{ menu('main', 'partials.menus.main') }}
+                <div class="top-nav-left">
+                    <div class="logo">Loja Online</div>
+                    {{ menu('main', 'partials.menus.main') }}
+                </div>
+                <div class="top-nav-right">
+                    @include('partials.menus.main-right')
+                </div>
             </div> <!-- end top-nav -->
             <div class="hero container">
                 <div class="hero-copy">
