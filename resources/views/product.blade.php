@@ -3,21 +3,37 @@
 @section('title', $product->name)
 
 @section('extra-css')
-
+    <link rel="stylesheet" href="{{ asset('css/algolia.css') }}">
 @endsection
 
 @section('content')
 
-    <div class="breadcrumbs">
-        <div class="container">
-            <a href="/">Início</a>
-            <i class="fa fa-chevron-right breadcrumb-separator"></i>
-            <a href="{{ route('shop.index') }}">Comprar</a>
-            <i class="fa fa-chevron-right breadcrumb-separator"></i>
-            <span>{{ $product->name }}</span>
-        </div>
-    </div> <!-- end breadcrumbs -->
+    @component('components.breadcrumbs')
+        <a href="/">Início</a>
+        <i class="fa fa-chevron-right breadcrumb-separator"></i>
+        <span><a href="{{ route('shop.index') }}">Comprar</a></span>
+        <i class="fa fa-chevron-right breadcrumb-separator"></i>
+        <span>{{ $product->name }}</span>
+    @endcomponent
 
+    <div class="container">
+        @if (session()->has('success_message'))
+            <div class="alert alert-success">
+                {{ session()->get('success_message') }}
+            </div>
+        @endif
+
+        @if(count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+    </div>
+    
     <div class="product-section container">
         <div>
             <div class="product-section-image">
@@ -83,4 +99,9 @@
             }
         })();
     </script>
+
+    <!-- Include AlgoliaSearch JS Client and autocomplete.js library -->
+    <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
+    <script src="{{ asset('js/algolia.js') }}"></script>
 @endsection
