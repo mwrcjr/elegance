@@ -1,77 +1,60 @@
 @extends('layout')
 
+@section('title', 'Crie sua conta')
+
 @section('content')
 <div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Criar Conta</div>
-
-                <div class="panel-body">
-                    <form class="form-horizontal" method="POST" action="{{ route('register') }}">
-                        {{ csrf_field() }}
-
-                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label for="name" class="col-md-4 control-label">Nome</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
-
-                                @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
-
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Senha</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
-
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="password-confirm" class="col-md-4 control-label">Confirmar Senha</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Criar
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+    <div class="auth-pages">
+        <div>
+            @if (session()->has('success_message'))
+            <div class="alert alert-success">
+                {{ session()->get('success_message') }}
             </div>
+            @endif @if(count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+            <h2>Criar Conta</h2>
+            <div class="spacer"></div>
+
+            <form method="POST" action="{{ route('register') }}">
+                {{ csrf_field() }}
+
+                <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="Nome Completo" required autofocus>
+
+                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="Informe seu Email" required>
+
+                <input id="password" type="password" class="form-control" name="password" placeholder="Senha" required>
+
+                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" placeholder="Confirmar Senha" required>
+
+                <div class="login-container">
+                    <button type="submit" class="auth-button">Criar Conta</button>
+                    <div class="already-have-container">
+                        <p><strong>Já possui uma conta?</strong></p>
+                        <a href="{{ route('login') }}">Acessar Conta</a>
+                    </div>
+                </div>
+
+            </form>
         </div>
-    </div>
+
+        <div class="auth-right">
+            <h2>Junte-se à Elegance Bastos!</h2>
+            <div class="spacer"></div>
+            <p><strong>Rapido e Fácil</strong></p>
+            <p>A criação de uma conta permitirá que você faça o compras mais rapidamente na Elegance Bastos, tendo fácil acesso ao histórico de pedidos e personalizando sua experiência de acordo com suas preferências.</p>
+
+            &nbsp;
+            <div class="spacer"></div>
+            <a href="#"><p><strong>Politica de privacidade</strong></p></a>
+            <p>A atualização e fornecimento correto dos dados no ato do cadastramento em nossa loja são de inteira responsabilidade do cliente. Se desejar, o cliente pode cancelar seu cadastro entrando em contato com nossa Central de Relacionamento.</p>
+        </div>
+    </div> <!-- end auth-pages -->
 </div>
 @endsection

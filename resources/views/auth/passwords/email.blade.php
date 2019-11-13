@@ -1,46 +1,40 @@
 @extends('layout')
+@section('title', 'Recuperar Senha')
 
 @section('content')
 <div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Reset Password</div>
-
-                <div class="panel-body">
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    <form class="form-horizontal" method="POST" action="{{ route('password.email') }}">
-                        {{ csrf_field() }}
-
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
-
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Send Password Reset Link
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+    <div class="auth-pages">
+        <div class="auth-left">
+            @if (session()->has('status'))
+            <div class="alert alert-success">
+                {{ session()->get('status') }}
             </div>
+            @endif @if(count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+            <h2>Esqueceu a sua senha?</h2>
+            <div class="spacer"></div>
+            <form action="{{ route('password.email') }}" method="POST">
+                {{ csrf_field() }}
+                <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="Seu Email" required autofocus>
+                <div class="login-container">
+                    <button type="submit" class="auth-button">Enviar Link de Recuperação</button>
+                </div>
+
+            </form>
+        </div>
+        <div class="auth-right">
+            <h2>Recuperação de senha</h2>
+            <div class="spacer"></div>
+            <p>Caso não se lembre da sua senha de acesso, use a recuparação de senha para continuar acessando sua conta da Elegance Bastos.</p>
+            <div class="spacer"></div>
+            <p>Informe seu e-mail cadastrado no campo indicado e clique em enviar link de recuperação. Você receberá um e-mail com as informaçoes necessárias para recuperar seu acesso.</p>
         </div>
     </div>
 </div>
