@@ -1,6 +1,7 @@
 (function() {
     var client = algoliasearch('6BXESBBMBK', '7af0cd503f72416eae1adc8beea0dcf1');
     var index = client.initIndex('products');
+    var enterPressed = false;
     //initialize autocomplete on search input (ID selector must match)
     autocomplete('#aa-search-input',
         { hint: false }, {
@@ -32,5 +33,10 @@
             }
         }).on('autocomplete:selected', function (event, suggestion, dataset) {
             window.location.href = window.location.origin + '/shop/' + suggestion.slug;
-        });;
+            enterPressed = true;
+        }).on('keyup', function(event) {
+            if (event.keyCode == 13 && !enterPressed) {
+                window.location.href = window.location.origin + '/search-algolia?q=' + document.getElementById('aa-search-input').value;
+            }
+        });
 })();
