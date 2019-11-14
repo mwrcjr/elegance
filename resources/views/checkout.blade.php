@@ -12,7 +12,7 @@
 
     <div class="container">
 
-      @if (session()->has('success_message'))
+        @if (session()->has('success_message'))
             <div class="spacer"></div>
             <div class="alert alert-success">
                 {{ session()->get('success_message') }}
@@ -99,17 +99,13 @@
                     <div class="spacer"></div>
 
                     <button type="submit" id="complete-order" class="button-primary full-width">Finalizar Compra</button>
-
-
                 </form>
             </div>
-
-
 
             <div class="checkout-table-container">
                 <h2>Detalhes da Compra</h2>
 
-                 <div class="checkout-table">
+                <div class="checkout-table">
                     @foreach (Cart::content() as $item)
                     <div class="checkout-table-row">
                         <div class="checkout-table-row-left">
@@ -126,9 +122,6 @@
                         </div>
                     </div> <!-- end checkout-table-row -->
                     @endforeach
-
-
-
                 </div> <!-- end checkout-table -->
 
                 <div class="checkout-totals">
@@ -136,18 +129,12 @@
                         Subtotal <br>
                         @if (session()->has('coupon'))
                             Desconto ({{ session()->get('coupon')['name'] }}) :
-                            <form action="{{ route('coupon.destroy') }}" method="POST" style="display:inline">
-                                {{ csrf_field() }}
-                                {{ method_field('delete') }}
-                                <button type="submit" style="font-size:14px">Remove</button>
-                            </form>
                             <br>
                             <hr>
                             Novo Subtotal <br>
                         @endif
                         Frete (10%)<br>
                         <span class="checkout-totals-total">TOTAL</span>
-
                     </div>
 
                     <div class="checkout-totals-right">
@@ -159,26 +146,11 @@
                         @endif
                         R$ {{ $newTax }}<br>
                         <span class="checkout-totals-total">R$ {{ $newTotal }}</span>
-
                     </div>
                 </div> <!-- end checkout-totals -->
-
-                @if (! session()->has('coupon'))
-
-                <a href="#" class="have-code">Se você possui um código de desconto, informe-o abaixo:</a>
-
-                <div class="have-code-container">
-                    <form action="{{ route('coupon.store') }}" method="POST">
-                        {{ csrf_field() }}
-                        <input type="text" name="coupon_code" id="coupon_code">
-                        <button type="submit" class="button button-plain">Aplicar</button>
-                    </form>
-                </div> <!-- end have-code-container -->
-                @endif
-
             </div>
-
         </div> <!-- end checkout-section -->
+        
     </div>
 
 @endsection

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Coupon;
+use App\Jobs\UpdateCoupon;
 use Illuminate\Http\Request;
-use Gloudemans\Shoppingcart\Facades\Cart;
 
 class CouponsController extends Controller
 {
@@ -18,14 +18,12 @@ class CouponsController extends Controller
     {
         $coupon = Coupon::where('code', $request->coupon_code)->first();
         if (!$coupon) {
-            return redirect()->route('checkout.index')->withErrors('Código de Desconto Inválido!');
+            return back()->withErrors('Código de Desconto Inválido!');
         }
-        session()->put('coupon', [
-            'name' => $coupon->code,
-            'discount' => $coupon->discount(Cart::subtotal()),
-        ]);
-        return redirect()->route('checkout.index')->with('success_message', 'Desconto aplicado com sucesso!');
+        dispatch_now(new UpdateCoupon($coupon));
+        return back()->with('success_message', 'Desconto aplicado com sucesso!');
     }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -34,6 +32,6 @@ class CouponsController extends Controller
     public function destroy()
     {
         session()->forget('coupon');
-        return redirect()->route('checkout.index')->with('success_message', 'Desconto removido com sucesso!');
+        return back()->with('success_message', 'Desconto removido com sucesso!');
     }
 }

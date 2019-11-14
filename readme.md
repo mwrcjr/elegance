@@ -1,6 +1,6 @@
 Projeto para a criacão de uma Ecommerce de Roupas
 
-Criado usando o framework php Laravel, na versão 5.5
+Criado usando o framework php Laravel, na versão 5.6
 
 ## License
 
